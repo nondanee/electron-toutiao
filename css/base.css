@@ -1,0 +1,66 @@
+@font-face {
+	font-family: 'iconfont';
+	src: url('../font/icomoon.ttf') format('truetype');
+	font-weight: 400;
+	font-style: normal;
+}
+
+:root{
+	--themeColor: #29AFEC;
+	--themeColorAlpha: rgba(41,175,236,0.4);
+	--topbarHeight: 4.2rem;
+}
+
+html{
+	font-size: 62.5%;
+	font-family: "PingFang SC";
+}
+
+body{
+	-webkit-user-select: none;
+	cursor: default;
+}
+
+button{
+	display: block;
+	-webkit-app-region: no-drag;
+	border: 0;
+	padding: 0;
+	outline: 0;
+	background-color: rgba(0,0,0,0);
+	cursor: pointer;
+}
+
+window{
+	display: block;
+	position: relative;
+	width: 36rem;
+	height: 30em;
+	border-radius: 0.5rem;
+	margin: 1.2rem auto 0 auto;
+	background-color: #ffffff;
+}
+
+window::before{
+	content: "";
+	position: absolute;
+	z-index: -1;
+	width: 2rem;
+	height: 2rem;
+	left: 0;right: 0;
+	margin: auto;
+	background-color: #ffffff;
+	border-radius: 0.2rem;
+	top: -0.8rem;
+	transform: rotate(45deg);
+}
+
+container{
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	height: 100%;
+	border-radius: 0.5rem;
+	overflow: hidden;
+}

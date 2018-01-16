@@ -1,0 +1,133 @@
+.tab,.post,.title{
+	transition: all 0.12s ease-out;
+}
+
+#top-bar{
+	width: 100%;
+	height: var(--topbarHeight);
+	background-color: white;
+	box-shadow: 0 0 1.2rem 0 rgba(0,0,0,0.16);
+	display: flex;
+	z-index: 5;
+}
+
+#view{
+	width: 100%;
+	height: calc(100% - 4.2rem);
+	overflow: auto;
+}
+
+#top-bar>.logo{
+	font-family: 'iconfont';
+	width: 1.8rem;
+	height: 1.8rem;
+	line-height: 1.8rem;
+	font-size: 1.8rem;
+	text-align: center;
+	color: var(--themeColor);
+	margin: auto 1.4rem;
+	cursor: pointer;
+}
+#top-bar>.logo::before{
+	content: "\E902";
+}
+#top-bar>.logo:hover{
+	text-shadow: 0 0 8px var(--themeColorAlpha);
+}
+
+#top-bar>.tab{
+	margin-right: 1rem;
+	padding: 0 0.1rem;
+	height: var(--topbarHeight);
+	line-height: var(--topbarHeight);
+	font-size: 1.3rem;
+	color: #BBBBBB;
+	cursor: pointer;
+	box-sizing: border-box;
+	border-bottom: 0.2rem solid transparent;
+}
+
+#top-bar>.tab.focus{
+	border-bottom-color: var(--themeColor) !important;
+	color: var(--themeColor) !important;
+}
+
+#top-bar>.tab:hover{
+	border-bottom-color: #CCCCCC;
+}
+
+.post{
+	width: 100%;
+	padding: 1rem 1.6rem 0.8rem 1.6rem;
+	box-sizing: border-box;
+	border-bottom: 0.1rem dotted #E5E5E5;
+	cursor: pointer;
+}
+
+.post:hover{
+	background-color: #F8F8F8;
+}
+.post:hover>.title{
+	color: var(--themeColor);
+}
+
+.post>.title{
+	width: 100%;
+	color: #4e4e4e;
+	font-size: 1.4rem;
+	font-weight: bold;
+}
+
+.post>.meta{
+	font-size: 1.2rem;
+	color: #B5B5B5;
+	margin-top: 0.2rem;
+}
+
+.post>.related{
+	display: flex;
+	margin-top: 0.6rem;
+	height: 1.8rem;
+	line-height: 1.8rem;
+}
+.related>.count{
+	flex-grow: 1;
+}
+
+.count>.praise::before{
+	content: "\E901";
+}
+.count>.comment::before{
+	content: "\E900";
+}
+.count>.praise::before,.count>.comment::before{
+	font-family: 'iconfont';
+	font-size: 1.2rem;
+	vertical-align: middle;
+	margin-right: 0.4rem;
+	color: #D6D6D6;
+}
+.count>.praise,.count>.comment{
+	display: inline-block;
+	vertical-align: middle;
+	font-size: 1rem;
+	margin-right: 1.2rem;
+	color: #C7C7C7;
+}
+.user>.avatar,.user>.name{
+	display: inline-block;
+	vertical-align: middle;
+}
+.user>.avatar{
+	margin: 0.2rem;
+	width: 1.4rem;
+	height: 1.4rem;
+	border-radius: 50%;
+	background-size: cover;
+}
+.user>.name{
+	font-size: 1rem;
+	height: 100%;
+	margin-left: 0.2rem;
+	color: #979797;
+}

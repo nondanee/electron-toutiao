@@ -1,0 +1,21 @@
+{
+  "name": "TouTiao",
+  "version": "0.0.6",
+  "description": "Programmers Sharing Platform",
+  "main": "main.js",
+  "scripts": {
+    "start": "./node_modules/.bin/electron .",
+    "package": "./node_modules/.bin/electron-packager . --platform=darwin --arch=all --version=1.7.10 --icon=./icon/dock.icns --out=dist/ --overwrite=true --prune=true"
+  },
+  "keywords": [
+    "toutiao",
+    "macOS"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "electron": "^1.7.10"
+  },
+  "devDependencies": {
+    "electron-packager": "^10.1.1"
+  }
+}
