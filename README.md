@@ -1,3 +1,5 @@
+<img src="icon/dock.png" alt="logo" width="144" height="144" align="right" />
+
 # Electron-TouTiao
 
 开发者头条 Menubar application for Mac  
@@ -40,4 +42,4 @@ $ npm run package
 
 ## License
 
-[MIT](https://mit-license.org/)
+MIT
