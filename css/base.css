@@ -1,14 +1,13 @@
 @font-face {
-	font-family: 'iconfont';
-	src: url('../font/icomoon.ttf') format('truetype');
+	font-family: 'strawberry';
+	src: url('../font/strawberry.ttf') format('truetype');
 	font-weight: 400;
 	font-style: normal;
 }
 
 :root{
 	--themeColor: #29AFEC;
-	--themeColorAlpha: rgba(41,175,236,0.4);
-	--topbarHeight: 4.2rem;
+	--topbarHeight: 4.0rem;
 }
 
 html{
@@ -19,6 +18,7 @@ html{
 body{
 	-webkit-user-select: none;
 	cursor: default;
+	margin: 0;
 }
 
 button{
