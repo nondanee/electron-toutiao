@@ -16,8 +16,8 @@ categories = [
 	{"text":"AI","param":"ai"}
 ]
 
-function storeFocus(i){
-	localStorage.setItem('focus', i)
+function storeFocus(focus){
+	localStorage.setItem('focus',focus)
 }
 
 function restoreFocus(){
@@ -26,27 +26,44 @@ function restoreFocus(){
 	tabs[focus].click()
 }
 
-function resetFocus(doms){
-	for(let j=0;j<doms.length;j++){
-		if(doms[j].classList.contains('focus')){
-			doms[j].classList.remove('focus')
+function resetFocus(elements){
+	Array.from(elements).forEach(function(element){
+		if(element.classList.contains('focus'))
+			element.classList.remove('focus')
+	})
+}
+
+function scrollTop(element){
+	let delay = null
+	let previous = element.scrollTop
+	function scroll(){
+		if(element.scrollTop == 0)
+			clearTimeout(delay)
+		else if(previous != element.scrollTop)
+			clearTimeout(delay)
+		else{
+			previous -= 40
+			element.scrollTop = previous
+			delay = setTimeout(function(){
+				scroll()
+			},10)
 		}
 	}
+	scroll()
 }
+
+
 
 function Feed(catagory) {
 	let page = 1
 	let loading = false
-	let scrollDelay = null
 	let sort = "hot" // or "new"
 
 	let baseUrl = null
-	if(catagory.param == "home"){
-		baseUrl = "https://toutiao.io/prev/"
-	}
-	else{
-		baseUrl = "https://toutiao.io/c/" + catagory.param 
-	}
+	if(catagory.param == "home")
+		baseUrl = `https://toutiao.io/prev/`
+	else
+		baseUrl = `https://toutiao.io/c/${catagory.param}`
 
 	let tab = document.createElement("div")
 	tab.className = "tab"
@@ -57,19 +74,6 @@ function Feed(catagory) {
 	feed.className = "feed"
 	view.appendChild(feed)
 
-
-	function scrollTop(){
-		if(feed.scrollTop==0){
-			clearTimeout(scrollDelay)
-		}
-		else{
-			feed.scrollTop -= 40
-			scrollDelay = setTimeout(function(){
-				scrollTop()
-			},10)
-		}
-	}
-
 	function loadMore(){
 		if(loading)
 			return
@@ -77,12 +81,10 @@ function Feed(catagory) {
 			loading = true
 
 		let url = null
-		if(catagory.param == "home"){
-			url = baseUrl+dateStr(page)
-		}
-		else{
-			url = baseUrl+"?page="+page+"&f="+sort
-		}
+		if(catagory.param == "home")
+			url = `${baseUrl}${dateStr(page)}`
+		else
+			url = `${baseUrl}?page=${page}&f=${sort}`
 
 		request(url,function(responseText){
 			page += 1
@@ -90,9 +92,9 @@ function Feed(catagory) {
 			if(responseText != null){
 				let data = parse(responseText)
 				let viewFragment = document.createDocumentFragment() 
-				for (let i=0;i<data.length;i++){
-					viewFragment.appendChild(buildPost(data[i]))
-				}
+				data.forEach(function(item){
+					viewFragment.appendChild(buildPost(item))
+				})
 				feed.appendChild(viewFragment)
 			}
 			else{
@@ -110,7 +112,7 @@ function Feed(catagory) {
 
 	tab.onclick = function(event){
 		if(this.classList.contains("focus")){
-			scrollTop()
+			scrollTop(feed)
 		}
 		else{
 			storeFocus([].indexOf.call(tabs,tab))
@@ -141,7 +143,7 @@ function dateStr(page){
 	let month = date.getMonth() + 1
 	month = (month < 10) ? '0' + month.toString() : month.toString()
 	let year = date.getFullYear()
-	return year + '-' + month + '-' + day
+	return `${year}-${month}-${day}`
 }
 
 
@@ -149,12 +151,10 @@ function request(url,callBack){
 	let xhr = new XMLHttpRequest()
 	xhr.onreadystatechange = function(){
 		if(xhr.readyState==4){
-			if(xhr.status==200){
+			if(xhr.status==200)
 				callBack(xhr.responseText)
-			}
-			else{
+			else
 				callBack()
-			}
 		}
 	}
 	xhr.open("GET",url,true)
@@ -162,23 +162,22 @@ function request(url,callBack){
 }
 
 
-
 function parse(responseText){
 	let data = []
 	let domParser = new DOMParser()
 	let domTree = domParser.parseFromString(responseText, 'text/html')
 	let posts = domTree.getElementsByClassName('post')
-	for(let i=0;i<posts.length;i++){
-		let title = posts[i].getElementsByClassName('title')[0].getElementsByTagName('a')[0].innerHTML
-		let meta = posts[i].getElementsByClassName('meta')[0].firstChild.wholeText.trim()
-		let praises = posts[i].getElementsByClassName('like-button')[0].getElementsByTagName('span')[0].innerHTML
-		let comments = posts[i].getElementsByClassName('meta')[0].getElementsByTagName('span')[0].lastChild.wholeText.trim()
-		let avatar = posts[i].getElementsByClassName('user-avatar')[0].getElementsByTagName('img')[0].src
-		let name = posts[i].getElementsByClassName('subject-name')[0].getElementsByTagName('a')[0].innerHTML
-		let postHref = 'https://toutiao.io'+posts[i].getElementsByClassName('title')[0].getElementsByTagName('a')[0].getAttribute('href')
-		let userHref = 'https://toutiao.io'+posts[i].getElementsByClassName('subject-name')[0].getElementsByTagName('a')[0].getAttribute('href')
+	Array.from(posts).forEach(function(post){
+		let title = post.getElementsByClassName('title')[0].getElementsByTagName('a')[0].innerHTML
+		let meta = post.getElementsByClassName('meta')[0].firstChild.wholeText.trim()
+		let praises = post.getElementsByClassName('like-button')[0].getElementsByTagName('span')[0].innerHTML
+		let comments = post.getElementsByClassName('meta')[0].getElementsByTagName('span')[0].lastChild.wholeText.trim()
+		let avatar = post.getElementsByClassName('user-avatar')[0].getElementsByTagName('img')[0].src
+		let name = post.getElementsByClassName('subject-name')[0].getElementsByTagName('a')[0].innerHTML
+		let postHref = 'https://toutiao.io' + post.getElementsByClassName('title')[0].getElementsByTagName('a')[0].getAttribute('href')
+		let userHref = 'https://toutiao.io' + post.getElementsByClassName('subject-name')[0].getElementsByTagName('a')[0].getAttribute('href')
 		data.push({title:title,meta:meta,praises:praises,comments:comments,avatar:avatar,name:name,postHref:postHref,userHref:userHref})
-	}
+	})
 	return data
 }
 
@@ -205,16 +204,16 @@ function buildPost(data){
 	user.className = 'user'
 	let avatar = document.createElement('div')
 	avatar.className = 'avatar'
-	avatar.style.backgroundImage = 'url('+data.avatar+')'
+	avatar.style.backgroundImage = `url(${data.avatar})`
 	let name = document.createElement('div')
 	name.className = 'name'
 	name.innerHTML = data.name
 
-	post.onclick = function (event){
+	post.onclick = function(event){
 		event.stopPropagation()
 		shell.openExternal(data.postHref)
 	}
-	user.onclick = function (event){
+	user.onclick = function(event){
 		event.stopPropagation()
 		shell.openExternal(data.userHref)
 	}
@@ -233,9 +232,9 @@ function buildPost(data){
 
 
 document.addEventListener("DOMContentLoaded", function(){
-	for(let i=0;i<categories.length;i++){
-		new Feed(categories[i])
-	}
+	categories.forEach(function(catagory){
+		new Feed(catagory)
+	})
 	restoreFocus()
 },false)
 
