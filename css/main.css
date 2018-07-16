@@ -102,19 +102,19 @@
 	font-weight: bold;
 }
 
-.post>.meta{
+.post>.source{
 	font-size: 1.2rem;
 	color: #B5B5B5;
 	margin-top: 0.2rem;
 }
 
-.post>.related{
+.post>.meta{
 	display: flex;
 	margin-top: 0.6rem;
 	height: 1.8rem;
 	line-height: 1.8rem;
 }
-.related>.count{
+.meta>.count{
 	flex-grow: 1;
 	display: flex;
 }

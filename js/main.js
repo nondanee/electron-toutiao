@@ -1,19 +1,19 @@
 const shell = require('electron').shell
 const view = document.getElementById('view')
 const topBar = document.getElementById('top-bar')
-const tabs = document.getElementsByClassName('tab')
-const feeds = document.getElementsByClassName('feed')
+const tabs = []
+const feeds = []
 
 categories = [
-	{"text":"首页","param":"home"},
-	{"text":"JAVA","param":"java"},
-	{"text":"iOS","param":"ios"},
-	{"text":"前端","param":"fe"},
-	{"text":"后端","param":"be"},
-	{"text":"架构","param":"arch"},
-	{"text":"大数据","param":"bigdata"},
-	{"text":"区块链","param":"blockchain"},
-	{"text":"AI","param":"ai"}
+	{'text':'首页','param':'home'},
+	{'text':'JAVA','param':'java'},
+	{'text':'iOS','param':'ios'},
+	{'text':'前端','param':'fe'},
+	{'text':'后端','param':'be'},
+	{'text':'架构','param':'arch'},
+	{'text':'大数据','param':'bigdata'},
+	{'text':'区块链','param':'blockchain'},
+	{'text':'AI','param':'ai'}
 ]
 
 function storeFocus(focus){
@@ -31,6 +31,13 @@ function resetFocus(elements){
 		if(element.classList.contains('focus'))
 			element.classList.remove('focus')
 	})
+}
+
+function createElement(tagName,className,innerHTML){
+	let element = document.createElement(tagName)
+	if(className) element.className = className
+	if(innerHTML) element.innerHTML = innerHTML
+	return element
 }
 
 function scrollTop(element){
@@ -53,25 +60,23 @@ function scrollTop(element){
 }
 
 
-
-function Feed(catagory) {
+function Feed(category) {
 	let page = 1
 	let loading = false
-	let sort = "hot" // or "new"
+	let sort = 'hot' // or 'new'
 
 	let baseUrl = null
-	if(catagory.param == "home")
+	if(category.param == 'home')
 		baseUrl = `https://toutiao.io/prev/`
 	else
-		baseUrl = `https://toutiao.io/c/${catagory.param}`
+		baseUrl = `https://toutiao.io/c/${category.param}`
 
-	let tab = document.createElement("div")
-	tab.className = "tab"
-	tab.innerHTML = catagory.text
-	topBar.append(tab)
+	let tab = createElement('div','tab',category.text)
+	tabs.push(tab)
+	topBar.appendChild(tab)
 
-	let feed = document.createElement("div")
-	feed.className = "feed"
+	let feed = createElement('div','feed')
+	feeds.push(feed)
 	view.appendChild(feed)
 
 	function loadMore(){
@@ -81,7 +86,7 @@ function Feed(catagory) {
 			loading = true
 
 		let url = null
-		if(catagory.param == "home")
+		if(category.param == 'home')
 			url = `${baseUrl}${dateStr(page)}`
 		else
 			url = `${baseUrl}?page=${page}&f=${sort}`
@@ -111,15 +116,15 @@ function Feed(catagory) {
 	}
 
 	tab.onclick = function(event){
-		if(this.classList.contains("focus")){
+		if(this.classList.contains('focus')){
 			scrollTop(feed)
 		}
 		else{
 			storeFocus([].indexOf.call(tabs,tab))
 			resetFocus(tabs)
 			resetFocus(feeds)
-			this.classList.add("focus")
-			feed.classList.add("focus")
+			this.classList.add('focus')
+			feed.classList.add('focus')
 		}
 		if(feed.childNodes.length==0){
 			loadMore()
@@ -127,7 +132,7 @@ function Feed(catagory) {
 	}
 
 	tab.ondblclick = function(){
-		feed.innerHTML = ""
+		feed.innerHTML = ''
 		page = 1
 		loadMore()
 	}
@@ -157,7 +162,7 @@ function request(url,callBack){
 				callBack()
 		}
 	}
-	xhr.open("GET",url,true)
+	xhr.open('GET',url,true)
 	xhr.send()
 }
 
@@ -169,45 +174,30 @@ function parse(responseText){
 	let posts = domTree.getElementsByClassName('post')
 	Array.from(posts).forEach(function(post){
 		let title = post.getElementsByClassName('title')[0].getElementsByTagName('a')[0].innerHTML
-		let meta = post.getElementsByClassName('meta')[0].firstChild.wholeText.trim()
+		let source = post.getElementsByClassName('meta')[0].firstChild.wholeText.trim()
 		let praises = post.getElementsByClassName('like-button')[0].getElementsByTagName('span')[0].innerHTML
 		let comments = post.getElementsByClassName('meta')[0].getElementsByTagName('span')[0].lastChild.wholeText.trim()
 		let avatar = post.getElementsByClassName('user-avatar')[0].getElementsByTagName('img')[0].src
 		let name = post.getElementsByClassName('subject-name')[0].getElementsByTagName('a')[0].innerHTML
 		let postHref = 'https://toutiao.io' + post.getElementsByClassName('title')[0].getElementsByTagName('a')[0].getAttribute('href')
 		let userHref = 'https://toutiao.io' + post.getElementsByClassName('subject-name')[0].getElementsByTagName('a')[0].getAttribute('href')
-		data.push({title:title,meta:meta,praises:praises,comments:comments,avatar:avatar,name:name,postHref:postHref,userHref:userHref})
+		data.push({title:title,source:source,praises:praises,comments:comments,avatar:avatar,name:name,postHref:postHref,userHref:userHref})
 	})
 	return data
 }
 
 function buildPost(data){
-	let post = document.createElement('div')
-	post.className = 'post'
-	let title = document.createElement('div')
-	title.className = 'title'
-	title.innerHTML = data.title
-	let meta = document.createElement('div')
-	meta.className = 'meta'
-	meta.innerHTML = data.meta
-	let related = document.createElement('div')
-	related.className = 'related'
-	let count = document.createElement('div')
-	count.className = 'count'
-	let praise = document.createElement('div')
-	praise.className = 'praise'
-	praise.innerHTML = data.praises
-	let comment = document.createElement('div')
-	comment.className = 'comment'
-	comment.innerHTML = data.comments
-	let user = document.createElement('div')
-	user.className = 'user'
-	let avatar = document.createElement('div')
-	avatar.className = 'avatar'
+	let post = createElement('div','post')
+	let title = createElement('div','title',data.title)
+	let source = createElement('div','source',data.source)
+	let meta = createElement('div','meta')
+	let count = createElement('div','count')
+	let praise = createElement('div','praise',data.praises)
+	let comment = createElement('div','comment',data.comments)
+	let user = createElement('div','user')
+	let avatar = createElement('div','avatar')
 	avatar.style.backgroundImage = `url(${data.avatar})`
-	let name = document.createElement('div')
-	name.className = 'name'
-	name.innerHTML = data.name
+	let name = createElement('div','name',data.name)
 
 	post.onclick = function(event){
 		event.stopPropagation()
@@ -219,10 +209,10 @@ function buildPost(data){
 	}
 
 	post.appendChild(title)
+	post.appendChild(source)
 	post.appendChild(meta)
-	post.appendChild(related)
-	related.appendChild(count)
-	related.appendChild(user)
+	meta.appendChild(count)
+	meta.appendChild(user)
 	count.appendChild(praise)
 	count.appendChild(comment)
 	user.appendChild(avatar)
@@ -230,13 +220,10 @@ function buildPost(data){
 	return post
 }
 
-
-document.addEventListener("DOMContentLoaded", function(){
-	categories.forEach(function(catagory){
-		new Feed(catagory)
-	})
-	restoreFocus()
-},false)
+categories.forEach(function(category){
+	new Feed(category)
+})
+restoreFocus()
 
 
 
