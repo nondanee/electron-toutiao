@@ -1,7 +1,7 @@
 {
   "name": "TouTiao",
   "version": "0.0.6",
-  "description": "Programmers Sharing Platform",
+  "description": "Programmers' Sharing Platform",
   "main": "main.js",
   "scripts": {
     "start": "./node_modules/.bin/electron .",

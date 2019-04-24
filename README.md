@@ -39,8 +39,10 @@ $ npm run package
 
 ## Reference
 
-[xiangsudian/CaoMei](https://github.com/xiangsudian/caomei)
+- [CM-Studio/TouTiao](https://github.com/CM-Studio/TouTiao)
+- [xiangsudian/CaoMei](https://github.com/xiangsudian/caomei)
 
 ## License
 
 MIT
+
